@@ -45,6 +45,16 @@ body {
     align-items: center;
 }
 
+.log{
+    max-width: 1024px;
+    width: 90%;
+    max-height: 200px;
+    overflow: auto;
+    overflow-x: hidden;
+    border: transparent;
+    margin: 30px auto;
+}
+
 .playground {
     max-width: 1024px;
     display: flex;
