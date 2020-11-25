@@ -9,10 +9,17 @@ let characterDamage = 0;
 let enemyDamage = 0;
 
 const $logs = document.querySelector('#logs');
+
+/*Default values of button's counters and const part of their names*/
 const maxPunchClicks = 5;
 const maxKickClicks = 20;
-/*const kickButtonInner = $kick.innerText;
-const punchButtonInner = $punch.innerText;*/
+const kickButtonInner = $kick.innerText;
+const punchButtonInner = $punch.innerText;
+let changePunchInner = createButtonWithCounter(maxPunchClicks, maxPunchClicks);
+let changeKickInner = createButtonWithCounter(maxKickClicks, maxKickClicks);
+changeKickInner($kick, kickButtonInner);
+changePunchInner($punch, punchButtonInner);
+
 
 const character = {
     name: 'Pikachu',
@@ -47,11 +54,9 @@ function $getElById(id) {
     return document.getElementById(id);
 }
 
-const countKick = countClicks($kick, maxKickClicks);
-
 $kick.addEventListener('click', function() {
     console.log('Kick');
-    countKick();
+    changeKickInner(this, kickButtonInner);
     characterDamage = random(15);
     enemyDamage = random(15);
     character.changeHP(enemyDamage);
@@ -61,13 +66,11 @@ $kick.addEventListener('click', function() {
     }
 });
 
-const countPunch = countClicks($punch, maxPunchClicks);
-
 $punch.addEventListener('click', function() {
     console.log('Punch');
-    countPunch();
-    characterDamage = random(20);
-    enemyDamage = random(20);
+    changePunchInner(this, punchButtonInner);
+    characterDamage = random(25);
+    enemyDamage = random(25);
     character.changeHP(enemyDamage);
     enemy.changeHP(characterDamage);
     if((character.damageHP > enemy.damageHP) && (enemy.damageHP <= 10 && enemy.damageHP > 0)) {
@@ -79,32 +82,41 @@ $fatality.addEventListener('click', function() {
     enemy.finalAttack();
 });
 
-
 $start.addEventListener('click', function() {
     showButton($kick);
+    changeKickInner($kick, kickButtonInner);
     showButton($punch);
+    changePunchInner($punch, punchButtonInner);
     hideButton($start);
     enemy.renewHP();
     character.renewHP();
     $logs.innerHTML = '';
+    renewClickLimits();
 });
 
-function countClicks(button, counter = 5) {
-    const innerText = button.innerText;
-    button.innerText = `${innerText} (${counter})`;
-    return function () {
-        counter--;
-        if (counter === 0) {
-            button.disabled = true;
+function createButtonWithCounter(counter, maxCounter) {
+    return function(btn, constInner) {
+        if(counter == 0){
+            btn.innerText = `${constInner} ${counter--} / ${maxCounter}`;
+            btn.disabled = true;     
         }
-        console.log(button.innerText);
-        button.innerText = `${innerText} (${counter})`;
-        return counter;
+        else {
+            btn.innerText = `${constInner} ${counter--} / ${maxCounter}`;
+        }
     }
 }
 
 function showButton(button) {
     button.style.removeProperty('display');
+}
+
+function renewClickLimits() {
+    $punch.disabled = false;
+    changePunchInner = createButtonWithCounter(maxPunchClicks, maxPunchClicks);
+    changePunchInner($punch, punchButtonInner);
+    $kick.disabled = false;
+    changeKickInner = createButtonWithCounter(maxKickClicks, maxKickClicks);
+    changeKickInner($kick, kickButtonInner);
 }
 
 function hideButton(button) {
@@ -114,16 +126,6 @@ function hideButton(button) {
 function random(num) {
      return Math.ceil(Math.random() * num );
 }
-
-function init() {
-    character.renderHP();
-    enemy.renderHP(); 
-    hideButton($kick);
-    hideButton($punch);
-    hideButton($fatality);
-}
-
-init();
 
 function renewHP() {
     this.damageHP = this.defaultHP;
@@ -191,3 +193,13 @@ function showLog (firstPlayer, secondPlayer, attackDamage) {
   $p.innerText = log;
   $logs.insertBefore($p, $logs.children[0]);
 }
+
+function init() {
+    character.renderHP();
+    enemy.renderHP(); 
+    hideButton($kick);
+    hideButton($punch);
+    hideButton($fatality);
+}
+
+init();
