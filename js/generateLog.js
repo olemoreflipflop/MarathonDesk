@@ -17,7 +17,7 @@ function generateLog(firstPlayer, secondPlayer, attackDamage) {
     `${name} пытался что-то сказать, но вдруг, неожиданно ${enemyName} со скуки, разбил бровь сопернику. ${name} получил -${attackDamage} урона`
     ];
 
-    return logs[random((logs.length) - 1, 0) ];
+    return logs[random(0, (logs.length) - 1) ];
 }
 
 export default generateLog;

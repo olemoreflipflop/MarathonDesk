@@ -1,12 +1,14 @@
+import {startGame} from "./main.js";
+
 class Selectors {
-	constructor(name) {
-	  this.elHP = document.getElementById(`health-${name}`);
-	  this.elProgressbar = document.getElementById(`progressbar-${name}`);
+	constructor(selectors) {
+	  this.elHP = document.getElementById(`health-${selectors}`);
+	  this.elProgressbar = document.getElementById(`progressbar-${selectors}`);
 	}
   }
 
 class Pokemon extends Selectors {
-constructor({ name, hp, type, selectors }) {
+constructor({ name, hp, type, selectors, attacks = [] }) {
 	super(selectors);
 
 	this.name = name;
@@ -15,7 +17,7 @@ constructor({ name, hp, type, selectors }) {
 		current: hp,
 		total: hp,
 	}
-	
+	this.attacks = attacks;
 	this.renderHP(); 
 }
 
@@ -25,6 +27,7 @@ changeHP = (attack, cb) => {
 	if(this.hp.current <= 0) {
 		this.hp.current = 0;
 		alert(`${this.name} проиграл.` );
+		startGame();
 	}
 
 	this.renderHP();
